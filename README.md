@@ -2,6 +2,8 @@
 
 Transcribes voice memos to text **entirely on-device** using Tether's QVAC SDK — no cloud services, no API keys, and your audio never leaves your machine.
 
+Two ways to use it: a **web UI** (record live from your microphone or upload a file) or a simple **CLI**.
+
 ## Requirements
 
 - [Node.js](https://nodejs.org) **22.17 or newer** (required by the QVAC SDK)
@@ -13,7 +15,22 @@ Transcribes voice memos to text **entirely on-device** using Tether's QVAC SDK �
 npm install
 ```
 
-## Run
+## Web UI — record live or upload
+
+Start the server:
+
+```bash
+npm run web
+```
+
+Then open **http://localhost:3000** in your browser.
+
+- **Record live:** click **● Start Recording** (the browser asks for microphone permission), speak, then click **■ Stop Recording**. A red pulsing dot and timer show that recording is in progress. The recording is transcribed automatically and appears in the transcript box.
+- **Upload a file:** click **📁 Choose audio file…** and pick an audio file (16 kHz mono WAV works best).
+
+While transcription runs, a spinner shows progress. Recordings are converted to 16 kHz mono WAV directly in your browser, so the on-device model always receives WAV — no extra tools like ffmpeg are required. All transcription still happens locally via QVAC; the browser only talks to your own machine.
+
+## CLI — transcribe a file
 
 With the included sample memo:
 

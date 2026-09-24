@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Voice Memo Transcriber</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="card">
+    <h1>🎙️ Voice Memo Transcriber</h1>
+    <p class="subtitle">On-device transcription with Tether's QVAC SDK — your audio never leaves your computer.</p>
+
+    <section class="panel">
+      <h2>Option 1 — Record live</h2>
+      <div class="row">
+        <button id="record-btn" class="btn primary">● Start Recording</button>
+        <button id="stop-btn" class="btn danger" hidden>■ Stop Recording</button>
+        <span id="rec-indicator" class="rec-indicator" hidden>
+          <span class="dot" aria-hidden="true"></span>
+          <span id="timer">00:00</span>
+        </span>
+      </div>
+      <p class="hint">Recording stops and transcribes automatically when you press Stop.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Option 2 — Upload a file</h2>
+      <input type="file" id="file-input" accept="audio/*,.wav" hidden>
+      <button id="upload-btn" class="btn">📁 Choose audio file…</button>
+      <span id="file-name" class="file-name"></span>
+    </section>
+
+    <div id="status" class="status" hidden>
+      <span class="spinner" aria-hidden="true"></span>
+      <span id="status-text">Working…</span>
+    </div>
+    <div id="error" class="error" hidden></div>
+
+    <section class="panel result" id="result-panel" hidden>
+      <h2>Transcript</h2>
+      <textarea id="transcript" readonly rows="6" placeholder="Your transcript will appear here…"></textarea>
+    </section>
+
+    <footer>100% local — no cloud services, no API keys.</footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

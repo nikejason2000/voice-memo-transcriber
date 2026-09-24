@@ -5,7 +5,8 @@
   "type": "module",
   "main": "transcribe.js",
   "scripts": {
-    "start": "node transcribe.js"
+    "start": "node transcribe.js",
+    "web": "node server.js"
   },
   "engines": {
     "node": ">=22.17.0"
