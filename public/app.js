@@ -113,6 +113,31 @@ async function blobToWav16k(blob) {
   }
 }
 
+/**
+ * POST the WAV to the backend. If the browser pulled a pooled keep-alive
+ * socket that the server closed while a previous transcription was running
+ * (Chrome reports this as "Failed to fetch" without the request ever
+ * reaching the server), retry exactly once on a fresh connection.
+ */
+async function postAudio(wav) {
+  try {
+    return await fetch('/api/transcribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'audio/wav' },
+      body: wav,
+    });
+  } catch (err) {
+    if (err instanceof TypeError) {
+      return await fetch('/api/transcribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'audio/wav' },
+        body: wav,
+      });
+    }
+    throw err;
+  }
+}
+
 async function transcribeBlob(blob) {
   clearStatus();
   setStatus('Converting audio and sending to the on-device model…');
@@ -120,18 +145,19 @@ async function transcribeBlob(blob) {
   resultPanel.hidden = true;
   try {
     const wav = await blobToWav16k(blob);
-    const response = await fetch('/api/transcribe', {
-      method: 'POST',
-      headers: { 'Content-Type': 'audio/wav' },
-      body: wav,
-    });
+    const response = await postAudio(wav);
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || `Server error (${response.status})`);
     clearStatus();
     showTranscript(data.text || '(empty transcript)');
   } catch (err) {
     clearStatus();
-    showError(err.message || 'Transcription failed.');
+    const msg = err.message || 'Transcription failed.';
+    showError(
+      msg === 'Failed to fetch'
+        ? 'Could not reach the transcription server. Is “npm run web” still running?'
+        : msg
+    );
   }
 }
 

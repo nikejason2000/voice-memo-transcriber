@@ -50,22 +50,28 @@ function readRequestBody(req, maxBytes) {
   return new Promise((resolveBody, reject) => {
     const chunks = [];
     let size = 0;
+    let tooLarge = false;
     req.on('data', (chunk) => {
+      if (tooLarge) return; // keep draining, discard content
       size += chunk.length;
       if (size > maxBytes) {
-        reject(new Error('Payload too large'));
-        req.destroy();
+        tooLarge = true;
+        chunks.length = 0;
         return;
       }
       chunks.push(chunk);
     });
-    req.on('end', () => resolveBody(Buffer.concat(chunks)));
+    req.on('end', () => resolveBody(tooLarge ? null : Buffer.concat(chunks)));
     req.on('error', reject);
   });
 }
 
 async function handleTranscribe(req, res) {
   const audioBuffer = await readRequestBody(req, MAX_UPLOAD_BYTES);
+  if (audioBuffer === null) {
+    sendJson(res, 413, { error: `Audio too large (max ${MAX_UPLOAD_BYTES / (1024 * 1024)} MB).` });
+    return;
+  }
   if (audioBuffer.length === 0) {
     sendJson(res, 400, { error: 'No audio received.' });
     return;
@@ -114,6 +120,12 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
+  // Node closes idle keep-alive connections after 5s by default. Transcription
+  // can take much longer, and a browser reusing such a stale connection for
+  // its next POST fails with "Failed to fetch" before the request ever
+  // arrives here. Keep sockets alive well beyond a full transcription.
+  server.keepAliveTimeout = 120_000;
+  server.headersTimeout = 125_000; // must exceed keepAliveTimeout
   console.log(`▸ Voice Memo Transcriber web UI running at http://localhost:${PORT}`);
   console.log('▸ Open that address in your browser to record or upload audio.');
 });
