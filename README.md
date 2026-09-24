@@ -25,8 +25,8 @@ npm run web
 
 Then open **http://localhost:3000** in your browser.
 
-- **Record live:** click **● Start Recording** (the browser asks for microphone permission), speak, then click **■ Stop Recording**. A red pulsing dot and timer show that recording is in progress. The recording is transcribed automatically and appears in the transcript box.
-- **Upload a file:** click **📁 Choose audio file…** and pick an audio file (16 kHz mono WAV works best).
+- **Record live:** press the big amber button (the browser asks for microphone permission), speak, then press it again to stop. A blinking **REC** indicator and timer show that recording is in progress. The recording is transcribed automatically and appears in the transcript panel (with a one-click **Copy**).
+- **Upload a file:** **drop an audio file** onto the drop zone or click **browse** (16 kHz mono WAV works best).
 
 While transcription runs, a spinner shows progress. Recordings are converted to 16 kHz mono WAV directly in your browser, so the on-device model always receives WAV — no extra tools like ffmpeg are required. All transcription still happens locally via QVAC; the browser only talks to your own machine.
 

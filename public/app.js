@@ -11,6 +11,8 @@ const recordBtn = document.getElementById('record-btn');
 const stopBtn = document.getElementById('stop-btn');
 const recIndicator = document.getElementById('rec-indicator');
 const timerEl = document.getElementById('timer');
+const transportHint = document.getElementById('transport-hint');
+const dropZone = document.getElementById('drop-zone');
 const uploadBtn = document.getElementById('upload-btn');
 const fileInput = document.getElementById('file-input');
 const fileNameEl = document.getElementById('file-name');
@@ -19,6 +21,7 @@ const statusTextEl = document.getElementById('status-text');
 const errorEl = document.getElementById('error');
 const resultPanel = document.getElementById('result-panel');
 const transcriptEl = document.getElementById('transcript');
+const copyBtn = document.getElementById('copy-btn');
 
 let mediaRecorder = null;
 let mediaStream = null;
@@ -43,7 +46,7 @@ function showError(message) {
 }
 
 function showTranscript(text) {
-  transcriptEl.value = text;
+  transcriptEl.textContent = text;
   resultPanel.hidden = false;
 }
 
@@ -141,7 +144,7 @@ async function postAudio(wav) {
 async function transcribeBlob(blob) {
   clearStatus();
   setStatus('Converting audio and sending to the on-device model…');
-  transcriptEl.value = '';
+  transcriptEl.textContent = '';
   resultPanel.hidden = true;
   try {
     const wav = await blobToWav16k(blob);
@@ -189,6 +192,7 @@ async function startRecording() {
   recordBtn.hidden = true;
   stopBtn.hidden = false;
   recIndicator.hidden = false;
+  transportHint.textContent = 'Recording… press the stop button when finished';
   secondsElapsed = 0;
   timerEl.textContent = '00:00';
   timerInterval = setInterval(() => {
@@ -207,9 +211,14 @@ function stopRecording() {
   recordBtn.hidden = false;
   stopBtn.hidden = true;
   recIndicator.hidden = true;
+  transportHint.textContent = 'Press to record — transcription starts when you stop';
 }
 
-// ---- File upload fallback ----
+// ---- File upload (browse or drag & drop) ----
+
+function openFilePicker() {
+  fileInput.click();
+}
 
 function handleFileSelected() {
   const file = fileInput.files && fileInput.files[0];
@@ -218,7 +227,47 @@ function handleFileSelected() {
   transcribeBlob(file);
 }
 
+dropZone.addEventListener('click', openFilePicker);
+uploadBtn.addEventListener('click', (event) => {
+  event.stopPropagation(); // dropzone click would otherwise fire too
+  openFilePicker();
+});
+fileInput.addEventListener('change', handleFileSelected);
+
+dropZone.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    openFilePicker();
+  }
+});
+
+dropZone.addEventListener('dragover', (event) => {
+  event.preventDefault();
+  dropZone.classList.add('dragover');
+});
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', (event) => {
+  event.preventDefault();
+  dropZone.classList.remove('dragover');
+  const file = event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0];
+  if (!file) return;
+  fileNameEl.textContent = file.name;
+  transcribeBlob(file);
+});
+
+// ---- Copy transcript ----
+
+copyBtn.addEventListener('click', async () => {
+  const text = transcriptEl.textContent || '';
+  if (!text) return;
+  try {
+    await navigator.clipboard.writeText(text);
+    copyBtn.textContent = 'Copied ✓';
+  } catch {
+    copyBtn.textContent = 'Copy failed';
+  }
+  setTimeout(() => { copyBtn.textContent = 'Copy'; }, 1600);
+});
+
 recordBtn.addEventListener('click', startRecording);
 stopBtn.addEventListener('click', stopRecording);
-uploadBtn.addEventListener('click', () => fileInput.click());
-fileInput.addEventListener('change', handleFileSelected);

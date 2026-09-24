@@ -4,46 +4,63 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Voice Memo Transcriber</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d1117'/%3E%3Crect x='13' y='6' width='6' height='13' rx='3' fill='%23f0b429'/%3E%3Cpath d='M9 16a7 7 0 0 0 14 0' stroke='%23f0b429' stroke-width='2.4' fill='none' stroke-linecap='round'/%3E%3Cline x1='16' y1='23' x2='16' y2='27' stroke='%23f0b429' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="card">
-    <h1>🎙️ Voice Memo Transcriber</h1>
-    <p class="subtitle">On-device transcription with Tether's QVAC SDK — your audio never leaves your computer.</p>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+      <span class="brand-name">VoiceMemo</span>
+      <span class="brand-sub">transcriber</span>
+    </div>
+    <span class="privacy-chip">on-device · private</span>
+  </header>
 
-    <section class="panel">
-      <h2>Option 1 — Record live</h2>
-      <div class="row">
-        <button id="record-btn" class="btn primary">● Start Recording</button>
-        <button id="stop-btn" class="btn danger" hidden>■ Stop Recording</button>
-        <span id="rec-indicator" class="rec-indicator" hidden>
-          <span class="dot" aria-hidden="true"></span>
-          <span id="timer">00:00</span>
-        </span>
+  <main class="stage">
+    <section class="recorder">
+      <div class="transport">
+        <button id="record-btn" class="rec-btn" aria-label="Start recording"></button>
+        <button id="stop-btn" class="rec-btn stop" aria-label="Stop recording" hidden></button>
+        <div class="halo" aria-hidden="true"></div>
       </div>
-      <p class="hint">Recording stops and transcribes automatically when you press Stop.</p>
+      <div class="readout">
+        <span id="rec-indicator" class="rec-status" hidden><span class="dot" aria-hidden="true"></span>REC</span>
+        <span id="timer" class="timer">00:00</span>
+      </div>
+      <p class="transport-hint" id="transport-hint">Press to record — transcription starts when you stop</p>
     </section>
 
-    <section class="panel">
-      <h2>Option 2 — Upload a file</h2>
-      <input type="file" id="file-input" accept="audio/*,.wav" hidden>
-      <button id="upload-btn" class="btn">📁 Choose audio file…</button>
-      <span id="file-name" class="file-name"></span>
+    <div class="divider" role="separator"><span>or</span></div>
+
+    <section class="dropwrap">
+      <div id="drop-zone" class="dropzone" tabindex="0">
+        <input type="file" id="file-input" accept="audio/*,.wav" hidden>
+        <span class="dz-icon" aria-hidden="true">⇪</span>
+        <span class="dz-text"><strong>Drop an audio file</strong> or <button id="upload-btn" class="linklike" type="button">browse</button></span>
+        <span id="file-name" class="dz-file"></span>
+      </div>
     </section>
 
-    <div id="status" class="status" hidden>
-      <span class="spinner" aria-hidden="true"></span>
+    <div id="status" class="statusline" hidden>
+      <span class="shimmer" aria-hidden="true"></span>
       <span id="status-text">Working…</span>
     </div>
-    <div id="error" class="error" hidden></div>
+    <div id="error" class="errorline" hidden></div>
 
-    <section class="panel result" id="result-panel" hidden>
-      <h2>Transcript</h2>
-      <textarea id="transcript" readonly rows="6" placeholder="Your transcript will appear here…"></textarea>
+    <section id="result-panel" class="transcript-panel" hidden>
+      <div class="tp-head">
+        <span class="tp-label">Transcript</span>
+        <button id="copy-btn" class="linklike" type="button">Copy</button>
+      </div>
+      <p id="transcript" class="tp-body"></p>
     </section>
-
-    <footer>100% local — no cloud services, no API keys.</footer>
   </main>
+
+  <footer class="foot">
+    <span>whisper.cpp · qvac sdk · runs entirely on this machine — no cloud, no api keys</span>
+  </footer>
+
   <script src="app.js"></script>
 </body>
 </html>
