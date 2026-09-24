@@ -3,18 +3,18 @@
 [hidden] { display: none !important; }
 
 :root {
-  --bg: #0d1117;
-  --panel: #121821;
-  --panel-2: #0f141c;
-  --line: #1e2937;
-  --line-strong: #2c3a4e;
-  --text: #e6ebf2;
-  --dim: #8b98a9;
-  --faint: #5c6878;
-  --amber: #f0b429;
-  --amber-soft: rgba(240, 180, 41, 0.14);
+  --bg: #0a0a0a;
+  --panel: #111111;
+  --panel-2: #0d0d0d;
+  --line: #222222;
+  --line-strong: #333333;
+  --text: #f5f5f5;
+  --dim: #a3a3a3;
+  --faint: #6b6b6b;
+  --accent: #ffffff;
+  --accent-bright: #ffffff;
+  --accent-soft: rgba(255, 255, 255, 0.06);
   --red: #e5484d;
-  --green: #3dd68c;
 }
 
 html { color-scheme: dark; }
@@ -56,7 +56,7 @@ body {
 }
 .brand-mark i {
   width: 3px;
-  background: var(--amber);
+  background: var(--text);
   border-radius: 1px;
   animation: eq 1.2s ease-in-out infinite;
 }
@@ -83,11 +83,11 @@ body {
   font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--green);
-  border: 1px solid rgba(61, 214, 140, 0.35);
-  background: rgba(61, 214, 140, 0.08);
+  color: var(--dim);
+  border: 1px solid var(--line-strong);
   padding: 5px 10px;
   border-radius: 999px;
+  white-space: nowrap;
 }
 
 /* ---------- stage ---------- */
@@ -112,21 +112,10 @@ body {
   padding: 26px 0 30px;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background:
-    radial-gradient(420px 180px at 50% 0%, rgba(240, 180, 41, 0.05), transparent 70%),
-    var(--panel);
+  background: var(--panel);
 }
 
 .transport { position: relative; width: 96px; height: 96px; }
-
-.halo {
-  position: absolute;
-  inset: -7px;
-  border-radius: 50%;
-  border: 1px dashed var(--line-strong);
-  opacity: 0.6;
-  pointer-events: none;
-}
 
 .rec-btn {
   position: relative;
@@ -134,43 +123,50 @@ body {
   width: 84px;
   height: 84px;
   border-radius: 50%;
-  border: 1px solid rgba(240, 180, 41, 0.55);
-  background:
-    radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.22), transparent 42%),
-    linear-gradient(180deg, #ffc94d, #e7a90f);
-  box-shadow:
-    0 10px 28px rgba(240, 180, 41, 0.30),
-    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  border: 1px solid #ffffff;
+  background: linear-gradient(180deg, #ffffff, #d9d9d9);
+  color: #0a0a0a;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.55);
   cursor: pointer;
-  transition: transform 0.08s, box-shadow 0.15s, filter 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.08s, box-shadow 0.15s, background 0.15s;
 }
-.rec-btn::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: #171204;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.55);
+.rec-btn:hover:not(:disabled) {
+  background: linear-gradient(180deg, #ffffff, #efefef);
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.6),
+    0 0 22px rgba(255, 255, 255, 0.14);
 }
-.rec-btn:hover:not(:disabled) { filter: brightness(1.07); box-shadow: 0 12px 34px rgba(240, 180, 41, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.35); }
 .rec-btn:active:not(:disabled) { transform: scale(0.94); }
-.rec-btn:focus-visible { outline: 2px solid #ffd97a; outline-offset: 3px; }
+.rec-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 .rec-btn.stop {
-  background: linear-gradient(180deg, #f2565b, #cf3a3f);
-  border-color: rgba(229, 72, 77, 0.6);
-  box-shadow: 0 10px 28px rgba(229, 72, 77, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.30);
+  background: linear-gradient(180deg, #ef5358, #c9363b);
+  border-color: #e5484d;
+  color: #ffffff;
+  box-shadow: 0 10px 28px rgba(229, 72, 77, 0.32);
   animation: breathe 1.6s ease-in-out infinite;
 }
-.rec-btn.stop::after { border-radius: 4px; width: 24px; height: 24px; background: #1c0708; }
-.rec-btn.stop:hover:not(:disabled) { box-shadow: 0 12px 34px rgba(229, 72, 77, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.30); }
+.rec-btn.stop:hover:not(:disabled) {
+  background: linear-gradient(180deg, #f2565b, #d43d42);
+  border-color: #ef5358;
+  color: #ffffff;
+  box-shadow: 0 12px 34px rgba(229, 72, 77, 0.45);
+}
+
+.stop-square {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  background: currentColor;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
 
 @keyframes breathe {
-  0%, 100% { box-shadow: 0 10px 28px rgba(229, 72, 77, 0.30), 0 0 0 0 rgba(229, 72, 77, 0.28); }
-  50% { box-shadow: 0 10px 28px rgba(229, 72, 77, 0.30), 0 0 0 12px rgba(229, 72, 77, 0); }
+  0%, 100% { box-shadow: 0 10px 28px rgba(229, 72, 77, 0.32), 0 0 0 0 rgba(229, 72, 77, 0.30); }
+  50% { box-shadow: 0 10px 28px rgba(229, 72, 77, 0.32), 0 0 0 12px rgba(229, 72, 77, 0); }
 }
 
 .readout {
@@ -256,27 +252,27 @@ body {
 .dropzone:hover,
 .dropzone:focus-visible,
 .dropzone.dragover {
-  border-color: var(--amber);
-  background: var(--amber-soft);
+  border-color: rgba(255, 255, 255, 0.55);
+  background: var(--accent-soft);
   outline: none;
 }
 
 .dz-icon { font-size: 20px; color: var(--faint); }
 .dz-text strong { color: var(--text); font-weight: 600; }
-.dz-file { color: var(--amber); font-size: 12px; min-height: 1em; }
+.dz-file { color: var(--text); font-size: 12px; min-height: 1em; }
 
 .linklike {
   background: none;
   border: none;
   padding: 0;
   font: inherit;
-  color: var(--amber);
+  color: var(--text);
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-color: rgba(240, 180, 41, 0.45);
+  text-decoration-color: rgba(255, 255, 255, 0.4);
 }
-.linklike:hover { color: #ffd166; }
+.linklike:hover { color: #ffffff; text-decoration-color: #ffffff; }
 
 /* ---------- status / errors ---------- */
 
@@ -298,8 +294,8 @@ body {
   width: 14px;
   height: 14px;
   flex: 0 0 auto;
-  border: 2px solid rgba(240, 180, 41, 0.25);
-  border-top-color: var(--amber);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: #ffffff;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -324,7 +320,7 @@ body {
   margin-top: 20px;
   border: 1px solid var(--line-strong);
   border-radius: 14px;
-  background: linear-gradient(180deg, rgba(240, 180, 41, 0.045), transparent 55%), var(--panel);
+  background: var(--panel);
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
   overflow: hidden;
 }
@@ -342,7 +338,7 @@ body {
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--amber);
+  color: var(--text);
 }
 
 .tp-body {
